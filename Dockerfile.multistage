@@ -1,8 +1,10 @@
+# ---------- Build Stage ----------
 FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 COPY . .
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests -B
 
+# ---------- Runtime Stage ----------
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
