@@ -9,6 +9,7 @@ WORKDIR /app
 #copy all  code
 
 COPY . .
+
 #make maven wrapper executable and build project
 
 RUN chmod +x mvnw && ./mvnw clean package -DskipTests -B
@@ -18,5 +19,5 @@ RUN chmod +x mvnw && ./mvnw clean package -DskipTests -B
 EXPOSE 8080
 
 # Define ENTRYPINT
-    
+
 ENTRYPOINT ["sh", "-c", "java -jar target/*.jar"]
