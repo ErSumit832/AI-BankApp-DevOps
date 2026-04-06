@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "ai_bank_app"
+        IMAGE_NAME = "ai_bankapp"
         IMAGE_TAG  = "latest"
     }
 
@@ -26,8 +26,8 @@ pipeline {
                     usernameVariable: "dockerHubUser",
                 )]) {
                     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                    sh "docker image tag my-app ${env.dockerHubUser}/ai_bank_app:latest"
-                    sh "docker push ${env.dockerHubUser}/ai_bank_app:latest"
+                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
                     
                     }
                 }
@@ -41,7 +41,7 @@ pipeline {
         }
         stage("code deploy"){
             steps{
-                sh "docker-compose up -d --build ai_bank_app:latest "
+                sh "docker-compose up -d  "
             }
         }
         
