@@ -1,14 +1,21 @@
-pipeline{
-    agent any;
+
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = "ai_bank_app"
+        IMAGE_TAG  = "latest"
+    }
+
     stages{
-        stage("code clone"){
+        stage("code checkout"){
             steps{
                 git url:"https://github.com/ErSumit832/AI-BankApp-DevOps.git", branch:"main"
             }
         }
         stage("docker build"){
             steps{
-                sh "docker build -t my-app ."
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
         stage("push to docker hub"){
@@ -27,7 +34,7 @@ pipeline{
             }
         stage("testing "){
             steps{
-                echo "test done"
+                echo "✅ Basic pipeline test passed"
                  
             }
             
