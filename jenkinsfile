@@ -1,0 +1,43 @@
+pipeline{
+    agent any;
+    stages{
+        stage("code clone"){
+            steps{
+                git url:"https://github.com/ErSumit832/AI-BankApp-DevOps.git", branch:"main"
+            }
+        }
+        stage("docker build"){
+            steps{
+                sh "docker build -t my-app ."
+            }
+        }
+        stage("push to docker hub"){
+            steps{
+                withCredentials([usernamePassword(
+                    credentialsId: "dockerHubCreds",
+                    passwordVariable: "dockerHubPass",
+                    usernameVariable: "dockerHubUser",
+                )]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker image tag my-app ${env.dockerHubUser}/AI_bank_app:latest"
+                    sh "docker push ${env.dockerHubUser}/AI_bank_app:latest"
+                    
+                    }
+                }
+            }
+        stage("testing "){
+            steps{
+                echo "test done"
+                 
+            }
+            
+        }
+        stage("code deploy"){
+            steps{
+                sh "docker-compose up -d --build flask-app "
+            }
+        }
+        
+    }
+}
+    
