@@ -4,7 +4,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "ai_bankapp"
-        IMAGE_TAG  = "latest"
+        IMAGE_TAG  = "v${BUILD_NUMBER}"   // ✅ Versioning
     }
 
     stages{
@@ -26,8 +26,8 @@ pipeline {
                     usernameVariable: "dockerHubUser",
                 )]) {
                     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${dockerHubUser}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "docker push ${dockerHubUser}/${IMAGE_NAME}:${IMAGE_TAG}"
                     
                     }
                 }
@@ -41,7 +41,7 @@ pipeline {
         }
         stage("code deploy"){
             steps{
-                sh "docker-compose up -d  "
+                sh "docker compose up -d  "
             }
         }
         
